@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DVR Converter V2</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    label { display: block; margin-top: 10px; }
+    input { margin-bottom: 10px; padding: 5px; width: 250px; }
+    button { padding: 10px 15px; font-size: 16px; cursor: pointer; }
+    .result { margin-top: 20px; font-weight: bold; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h1>DVR Time and Date Converter</h1>
+
+  <label for="currentDate">Current Date (YYYY-MM-DD):</label>
+  <input type="date" id="currentDate">
+
+  <label for="currentTime">Current Time (HH:MM):</label>
+  <input type="time" id="currentTime">
+
+  <label for="dvrDate">DVR Date (YYYY-MM-DD):</label>
+  <input type="date" id="dvrDate">
+
+  <label for="dvrTime">DVR Time (HH:MM):</label>
+  <input type="time" id="dvrTime">
+
+  <label for="desiredRealTime">Desired Real Time to View (HH:MM):</label>
+  <input type="time" id="desiredRealTime">
+
+  <button onclick="convertTime()">Convert</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function convertTime() {
+      const currentDateStr = document.getElementById('currentDate').value;
+      const currentTimeStr = document.getElementById('currentTime').value;
+      const dvrDateStr = document.getElementById('dvrDate').value;
+      const dvrTimeStr = document.getElementById('dvrTime').value;
+      const desiredTimeStr = document.getElementById('desiredRealTime').value;
+
+      if (!currentDateStr || !currentTimeStr || !dvrDateStr || !dvrTimeStr || !desiredTimeStr) {
+        document.getElementById('result').innerText = "Please fill out all fields.";
+        return;
+      }
+
+      const currentDateTime = new Date(currentDateStr + 'T' + currentTimeStr);
+      const dvrDateTime = new Date(dvrDateStr + 'T' + dvrTimeStr);
+      const desiredDateTime = new Date(currentDateStr + 'T' + desiredTimeStr);
+
+      // Calculate offset
+      const offset = dvrDateTime.getTime() - currentDateTime.getTime();
+
+      // Apply offset
+      const convertedDateTime = new Date(desiredDateTime.getTime() + offset);
+
+      const year = convertedDateTime.getFullYear();
+      const month = String(convertedDateTime.getMonth() + 1).padStart(2, '0');
+      const day = String(convertedDateTime.getDate()).padStart(2, '0');
+      const hours = String(convertedDateTime.getHours()).padStart(2, '0');
+      const minutes = String(convertedDateTime.getMinutes()).padStart(2, '0');
+
+      document.getElementById('result').innerText = `Look for: ${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+  </script>
+</body>
+</html>
